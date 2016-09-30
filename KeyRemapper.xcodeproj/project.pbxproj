@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF6B83C11D9D887200887370 /* KRStatusBarMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6B83C01D9D887200887370 /* KRStatusBarMenu.m */; };
 		EF8EC7291D9B773300C18041 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EF8EC7281D9B773300C18041 /* AppDelegate.m */; };
 		EF8EC72C1D9B773300C18041 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EF8EC72B1D9B773300C18041 /* main.m */; };
 		EF8EC72E1D9B773300C18041 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF8EC72D1D9B773300C18041 /* Assets.xcassets */; };
@@ -14,6 +15,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF6B83BF1D9D887200887370 /* KRStatusBarMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRStatusBarMenu.h; sourceTree = "<group>"; };
+		EF6B83C01D9D887200887370 /* KRStatusBarMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRStatusBarMenu.m; sourceTree = "<group>"; };
 		EF8EC7241D9B773300C18041 /* KeyRemapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyRemapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF8EC7271D9B773300C18041 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EF8EC7281D9B773300C18041 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -55,6 +58,8 @@
 			children = (
 				EF8EC7271D9B773300C18041 /* AppDelegate.h */,
 				EF8EC7281D9B773300C18041 /* AppDelegate.m */,
+				EF6B83BF1D9D887200887370 /* KRStatusBarMenu.h */,
+				EF6B83C01D9D887200887370 /* KRStatusBarMenu.m */,
 				EF8EC72D1D9B773300C18041 /* Assets.xcassets */,
 				EF8EC72F1D9B773300C18041 /* MainMenu.xib */,
 				EF8EC7321D9B773300C18041 /* Info.plist */,
@@ -142,6 +147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF6B83C11D9D887200887370 /* KRStatusBarMenu.m in Sources */,
 				EF8EC72C1D9B773300C18041 /* main.m in Sources */,
 				EF8EC7291D9B773300C18041 /* AppDelegate.m in Sources */,
 			);
@@ -293,6 +299,7 @@
 				EF8EC7371D9B773300C18041 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
