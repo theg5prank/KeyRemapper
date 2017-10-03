@@ -19,6 +19,44 @@ static CGEventRef eventTapCallback(CGEventTapProxy proxy, CGEventType type, CGEv
 @implementation AppDelegate {
     NSDictionary<NSNumber *, NSString *> *_pid2bundleIDCache;
     NSStatusItem *_statusItem;
+    CGEventSourceRef _eventSource;
+    dispatch_queue_t _eventPostQueue;
+}
+
+- (CGEventSourceRef)eventSource
+{
+    if ( _eventSource == NULL )
+    {
+        _eventSource = CGEventSourceCreate(kCGEventSourceStatePrivate);
+        CGEventSourceSetKeyboardType(_eventSource, LMGetKbdType());
+    }
+    return _eventSource;
+}
+
+- (dispatch_queue_t)eventPostQueue
+{
+    if ( _eventPostQueue == nil )
+    {
+        _eventPostQueue = dispatch_queue_create("KeyRemapper.eventPost", DISPATCH_QUEUE_SERIAL);
+    }
+    return _eventPostQueue;
+}
+
+- (void)postFakeControlUnderbar
+{
+    /* Again, an enormous hack that assumes an ANSI layout to avoid looking up how to actually type _ in uchr resources. */
+    static const struct { CGKeyCode key; BOOL down; } eventDescs[] = {{ kVK_Shift, YES}, {kVK_Control, YES}, {kVK_ANSI_Minus, YES}, {kVK_ANSI_Minus, NO}, {kVK_Control, NO}, {kVK_Shift, NO}};
+    dispatch_async([self eventPostQueue], ^{
+        for ( size_t i = 0; i < sizeof(eventDescs) / sizeof(eventDescs[0]); i++ ) {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                CGEventRef event = CGEventCreateKeyboardEvent([self eventSource], eventDescs[i].key, eventDescs[i].down);
+                CGEventPost(kCGSessionEventTap, event);
+                CFRelease(event);
+            });
+            /* need to actually sleep or not all the flags make it. 🤷‍♂️ */
+            [NSThread sleepForTimeInterval:.01]; 
+        }
+    });
 }
 
 - (CGEventRef)filterEventForTerminalBehaviors:(CGEventRef)event
@@ -47,9 +85,12 @@ static CGEventRef eventTapCallback(CGEventTapProxy proxy, CGEventType type, CGEv
     CGEventFlags bannedFlags = kCGEventFlagMaskCommand | kCGEventFlagMaskShift | kCGEventFlagMaskAlternate;
     
     if ((flags & kCGEventFlagMaskControl) && (flags & bannedFlags) == 0 && [str isEqualToString:@"/"] && [bundleID isEqualToString:@"com.apple.Terminal"]) {
-        // This is sufficient for Terminal. Otherwise we'd have to lookup the right virtual key sequence to type a _, blah blah blah.
-        UniChar character = 31;
-        CGEventKeyboardSetUnicodeString(event, 1, &character);
+        if ( CGEventGetType(event) == kCGEventKeyUp )
+        {
+            [self postFakeControlUnderbar];
+        }
+        /* snarf this event. */
+        event = NULL;
     }
     
     return event;
@@ -110,10 +151,6 @@ static CGEventRef eventTapCallback(CGEventTapProxy proxy, CGEventType type, CGEv
         dict[@(app.processIdentifier)] = app.bundleIdentifier;
     }
     _pid2bundleIDCache = dict;
-}
-
-- (void)applicationWillTerminate:(NSNotification *)aNotification {
-    // Insert code here to tear down your application
 }
 
 - (void)quitApp:(id)sender
